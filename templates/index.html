@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ISL Web Interpreter</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #111827;
+        color: white;
+        display: flex;
+        justify-content: center;
+        padding: 24px;
+      }
+      .container {
+        width: min(900px, 100%);
+        text-align: center;
+      }
+      video {
+        width: 100%;
+        max-width: 640px;
+        border-radius: 16px;
+        background: black;
+      }
+      .panel {
+        margin-top: 16px;
+        padding: 16px;
+        border-radius: 12px;
+        background: #1f2937;
+      }
+      button {
+        padding: 10px 18px;
+        margin: 12px 6px;
+        border: none;
+        border-radius: 8px;
+        background: #22c55e;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      #result {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ISL Interpreter</h1>
+      <video id="video" autoplay playsinline muted></video>
+      <div class="panel">
+        <button id="startBtn">Start Camera</button>
+        <button id="captureBtn">Predict</button>
+        <div id="status">Camera not started</div>
+        <div id="result">Waiting for prediction...</div>
+      </div>
+    </div>
+
+    <canvas id="canvas" style="display: none"></canvas>
+
+    <script>
+      const video = document.getElementById('video');
+      const canvas = document.getElementById('canvas');
+      const status = document.getElementById('status');
+      const result = document.getElementById('result');
+      const startBtn = document.getElementById('startBtn');
+      const captureBtn = document.getElementById('captureBtn');
+
+      async function startCamera() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'user' },
+            audio: false,
+          });
+          video.srcObject = stream;
+          status.textContent = 'Camera running';
+        } catch (error) {
+          status.textContent = 'Camera access denied or not available';
+          console.error(error);
+        }
+      }
+
+      async function predictCurrentFrame() {
+        if (!video.videoWidth || !video.videoHeight) {
+          status.textContent = 'Camera is not ready yet';
+          return;
+        }
+
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        status.textContent = 'Predicting...';
+
+        try {
+          const response = await fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: dataUrl }),
+          });
+
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.detail || 'Prediction failed');
+          }
+
+          result.textContent = `Prediction: ${data.label} (${data.confidence})`;
+          status.textContent = 'Prediction complete';
+        } catch (error) {
+          result.textContent = 'Prediction failed';
+          status.textContent = error.message;
+        }
+      }
+
+      startBtn.addEventListener('click', startCamera);
+      captureBtn.addEventListener('click', predictCurrentFrame);
+      setInterval(() => {
+        if (video.srcObject) {
+          predictCurrentFrame();
+        }
+      }, 2000);
+    </script>
+  </body>
+</html>

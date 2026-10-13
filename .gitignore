@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Project data and model artifacts
+ISL_Dataset/
+dataset/
+Dataset.zip
+Images/
+Letters/
+Training/
+Validation/
+Testing/
+tmp_test_data/
+X.pickle
+y.pickle
+*.keras
+ISL_Interpreter
+logs/
+checkpoints/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
