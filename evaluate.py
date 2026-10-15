@@ -10,7 +10,12 @@ from tensorflow.keras.models import load_model
 from model import IMG_SIZE, load_labels
 
 
-def load_split(split_dir, labels):
+def load_manifest(manifest_path):
+    # Manifest of image paths (relative to the repo root) to keep out of evaluation.
+    return {line.strip() for line in Path(manifest_path).read_text(encoding="utf-8").splitlines() if line.strip()}
+
+
+def load_split(split_dir, labels, include=None):
     split_dir = Path(split_dir)
     images = []
     targets = []
@@ -20,6 +25,8 @@ def load_split(split_dir, labels):
             raise FileNotFoundError(f"Missing class directory: {class_dir}")
         for image_path in sorted(class_dir.iterdir()):
             if image_path.suffix.lower() not in (".jpg", ".jpeg", ".png"):
+                continue
+            if include is not None and image_path.as_posix() not in include:
                 continue
             image = cv2.imread(str(image_path), cv2.IMREAD_GRAYSCALE)
             if image is None:
@@ -31,8 +38,8 @@ def load_split(split_dir, labels):
     return X, y
 
 
-def evaluate_split(model, split_dir, labels):
-    X, y = load_split(split_dir, labels)
+def evaluate_split(model, split_dir, labels, include=None):
+    X, y = load_split(split_dir, labels, include)
     predictions = model.predict(X, batch_size=64, verbose=0).argmax(axis=1)
     indices = list(range(len(labels)))
     precision, recall, f1, support = precision_recall_fscore_support(y, predictions, labels=indices, zero_division=0)
@@ -42,6 +49,7 @@ def evaluate_split(model, split_dir, labels):
             "recall": float(recall[i]),
             "f1": float(f1[i]),
             "support": int(support[i]),
+            "accuracy": float(recall[i]),
         }
         for i, label in enumerate(labels)
     }
@@ -54,15 +62,15 @@ def evaluate_split(model, split_dir, labels):
     return result, y, predictions
 
 
-def save_confusion_matrix(y, predictions, labels, output_path):
+def save_confusion_matrix(y, predictions, labels, output_path, title="Confusion matrix (Testing)"):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
     matrix = confusion_matrix(y, predictions, labels=list(range(len(labels))))
-    fig, ax = plt.subplots(figsize=(10, 8))
+    fig, ax = plt.subplots(figsize=(11, 9))
     image = ax.imshow(matrix, cmap="Blues")
-    ax.set_title("Confusion matrix (Testing)")
+    ax.set_title(title)
     ax.set_xlabel("Predicted")
     ax.set_ylabel("True")
     ax.set_xticks(range(len(labels)))
@@ -82,14 +90,15 @@ def main():
     parser.add_argument("--labels", default="labels.json", help="JSON file with class labels")
     parser.add_argument("--test-dir", default="Testing", help="Held-out test folder")
     parser.add_argument("--val-dir", default="Validation", help="Validation folder")
-    parser.add_argument("--output-dir", default="results", help="Folder for metrics and plots")
+    parser.add_argument("--exclude-duplicates", default=None, help="Manifest of Testing images to exclude for the clean-test evaluation")
+    parser.add_argument("--output", default="results/metrics.json", help="Where to write the metrics")
+    parser.add_argument("--confusion-matrix", default="results/confusion_matrix.png", help="Where to write the confusion matrix")
     parser.add_argument("--seed", type=int, default=42, help="Seed recorded with the metrics")
     args = parser.parse_args()
 
     labels = load_labels(args.labels)
     model = load_model(args.model_path)
-
-    output_dir = Path(args.output_dir)
+    output_dir = Path(args.output).parent
     output_dir.mkdir(parents=True, exist_ok=True)
 
     metrics = {
@@ -100,16 +109,23 @@ def main():
         "splits": {},
     }
 
-    for name, split_dir in (("Testing", args.test_dir), ("Validation", args.val_dir)):
-        result, y, predictions = evaluate_split(model, split_dir, labels)
+    if args.exclude_duplicates:
+        manifest = load_manifest(args.exclude_duplicates)
+        metrics["exclude_duplicates_manifest"] = str(args.exclude_duplicates)
+        plan = [("Testing", args.test_dir, None), ("Testing_clean", args.test_dir, manifest), ("Validation", args.val_dir, None)]
+    else:
+        plan = [("Testing", args.test_dir, None), ("Validation", args.val_dir, None)]
+
+    for name, split_dir, include in plan:
+        result, y, predictions = evaluate_split(model, split_dir, labels, include)
         metrics["splits"][name] = result
         print(f"{name}: n={result['num_images']} accuracy={result['accuracy']:.4f} macro_f1={result['macro_f1']:.4f}")
         if name == "Testing":
-            save_confusion_matrix(y, predictions, labels, output_dir / "confusion_matrix.png")
+            save_confusion_matrix(y, predictions, labels, args.confusion_matrix)
 
-    metrics_path = output_dir / "metrics.json"
-    metrics_path.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
-    print(f"Saved metrics to {metrics_path}")
+    output_path = Path(args.output)
+    output_path.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+    print(f"Saved metrics to {output_path}")
 
 
 if __name__ == "__main__":

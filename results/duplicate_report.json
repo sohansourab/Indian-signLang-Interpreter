@@ -1,0 +1,491 @@
+{
+  "method": {
+    "exact": "sha256",
+    "near": "phash 64-bit",
+    "phash_hamming_threshold": 5
+  },
+  "splits": {
+    "Training": {
+      "total": 18198,
+      "unique_sha256": 18054,
+      "redundant_within": 144,
+      "per_class": {
+        "A": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "B": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "C": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "D": {
+          "total": 700,
+          "unique_sha256": 694,
+          "redundant_within": 6
+        },
+        "E": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "F": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "G": {
+          "total": 700,
+          "unique_sha256": 688,
+          "redundant_within": 12
+        },
+        "H": {
+          "total": 699,
+          "unique_sha256": 698,
+          "redundant_within": 1
+        },
+        "I": {
+          "total": 699,
+          "unique_sha256": 696,
+          "redundant_within": 3
+        },
+        "J": {
+          "total": 700,
+          "unique_sha256": 698,
+          "redundant_within": 2
+        },
+        "K": {
+          "total": 700,
+          "unique_sha256": 677,
+          "redundant_within": 23
+        },
+        "L": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "M": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "N": {
+          "total": 700,
+          "unique_sha256": 692,
+          "redundant_within": 8
+        },
+        "O": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "P": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "Q": {
+          "total": 700,
+          "unique_sha256": 693,
+          "redundant_within": 7
+        },
+        "R": {
+          "total": 700,
+          "unique_sha256": 691,
+          "redundant_within": 9
+        },
+        "S": {
+          "total": 700,
+          "unique_sha256": 699,
+          "redundant_within": 1
+        },
+        "T": {
+          "total": 700,
+          "unique_sha256": 697,
+          "redundant_within": 3
+        },
+        "U": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "V": {
+          "total": 700,
+          "unique_sha256": 700,
+          "redundant_within": 0
+        },
+        "W": {
+          "total": 700,
+          "unique_sha256": 693,
+          "redundant_within": 7
+        },
+        "X": {
+          "total": 700,
+          "unique_sha256": 698,
+          "redundant_within": 2
+        },
+        "Y": {
+          "total": 700,
+          "unique_sha256": 642,
+          "redundant_within": 58
+        },
+        "Z": {
+          "total": 700,
+          "unique_sha256": 698,
+          "redundant_within": 2
+        }
+      }
+    },
+    "Validation": {
+      "total": 2579,
+      "unique_sha256": 2568,
+      "redundant_within": 11,
+      "per_class": {
+        "A": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "B": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "C": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "D": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "E": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "F": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "G": {
+          "total": 100,
+          "unique_sha256": 99,
+          "redundant_within": 1
+        },
+        "H": {
+          "total": 100,
+          "unique_sha256": 99,
+          "redundant_within": 1
+        },
+        "I": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "J": {
+          "total": 101,
+          "unique_sha256": 101,
+          "redundant_within": 0
+        },
+        "K": {
+          "total": 75,
+          "unique_sha256": 75,
+          "redundant_within": 0
+        },
+        "L": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "M": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "N": {
+          "total": 100,
+          "unique_sha256": 99,
+          "redundant_within": 1
+        },
+        "O": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "P": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "Q": {
+          "total": 101,
+          "unique_sha256": 101,
+          "redundant_within": 0
+        },
+        "R": {
+          "total": 100,
+          "unique_sha256": 99,
+          "redundant_within": 1
+        },
+        "S": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "T": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "U": {
+          "total": 101,
+          "unique_sha256": 101,
+          "redundant_within": 0
+        },
+        "V": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "W": {
+          "total": 100,
+          "unique_sha256": 100,
+          "redundant_within": 0
+        },
+        "X": {
+          "total": 100,
+          "unique_sha256": 99,
+          "redundant_within": 1
+        },
+        "Y": {
+          "total": 101,
+          "unique_sha256": 101,
+          "redundant_within": 0
+        },
+        "Z": {
+          "total": 100,
+          "unique_sha256": 94,
+          "redundant_within": 6
+        }
+      }
+    },
+    "Testing": {
+      "total": 5200,
+      "unique_sha256": 5162,
+      "redundant_within": 38,
+      "per_class": {
+        "A": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "B": {
+          "total": 200,
+          "unique_sha256": 199,
+          "redundant_within": 1
+        },
+        "C": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "D": {
+          "total": 200,
+          "unique_sha256": 190,
+          "redundant_within": 10
+        },
+        "E": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "F": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "G": {
+          "total": 200,
+          "unique_sha256": 196,
+          "redundant_within": 4
+        },
+        "H": {
+          "total": 200,
+          "unique_sha256": 199,
+          "redundant_within": 1
+        },
+        "I": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "J": {
+          "total": 200,
+          "unique_sha256": 197,
+          "redundant_within": 3
+        },
+        "K": {
+          "total": 200,
+          "unique_sha256": 194,
+          "redundant_within": 6
+        },
+        "L": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "M": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "N": {
+          "total": 200,
+          "unique_sha256": 198,
+          "redundant_within": 2
+        },
+        "O": {
+          "total": 200,
+          "unique_sha256": 199,
+          "redundant_within": 1
+        },
+        "P": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "Q": {
+          "total": 200,
+          "unique_sha256": 197,
+          "redundant_within": 3
+        },
+        "R": {
+          "total": 200,
+          "unique_sha256": 197,
+          "redundant_within": 3
+        },
+        "S": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "T": {
+          "total": 200,
+          "unique_sha256": 198,
+          "redundant_within": 2
+        },
+        "U": {
+          "total": 200,
+          "unique_sha256": 199,
+          "redundant_within": 1
+        },
+        "V": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "W": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "X": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "Y": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        },
+        "Z": {
+          "total": 200,
+          "unique_sha256": 200,
+          "redundant_within": 0
+        }
+      }
+    }
+  },
+  "exact_duplicates_across_splits": {
+    "Training_vs_Validation": {
+      "count": 99,
+      "per_class": {
+        "H": 25,
+        "R": 25,
+        "T": 24,
+        "Y": 25
+      }
+    },
+    "Training_vs_Testing": {
+      "count": 637,
+      "per_class": {
+        "E": 50,
+        "F": 50,
+        "H": 50,
+        "J": 50,
+        "K": 99,
+        "Q": 50,
+        "R": 50,
+        "T": 49,
+        "Y": 139,
+        "Z": 50
+      }
+    },
+    "Validation_vs_Testing": {
+      "count": 52,
+      "per_class": {
+        "H": 24,
+        "R": 23,
+        "Y": 4,
+        "Z": 1
+      }
+    }
+  },
+  "near_duplicates_vs_training": {
+    "Testing_vs_Training": {
+      "near_duplicate_count": 4053,
+      "compared": 5198,
+      "unreadable_for_phash": 2,
+      "unreadable_paths": [
+        "Testing/E/301.jpg",
+        "Testing/K/301.jpg"
+      ]
+    },
+    "Validation_vs_Training": {
+      "near_duplicate_count": 1791,
+      "compared": 2579,
+      "unreadable_for_phash": 0,
+      "unreadable_paths": []
+    }
+  },
+  "unreadable_for_phash_training": [],
+  "clean_test": {
+    "manifest": "splits/clean_test.txt",
+    "testing_total": 5200,
+    "clean_total": 4589,
+    "removed_exact_duplicates": 611
+  },
+  "filenames": {
+    "all_numeric_stems": false,
+    "example_stems": [
+      "175",
+      "176",
+      "177",
+      "178",
+      "179"
+    ],
+    "signer_or_session_identifiers_found": false,
+    "note": "Filenames are numeric image indices only; there is no signer or session id, so a group split is not possible from the data."
+  }
+}
