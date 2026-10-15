@@ -1,0 +1,12 @@
+FastAPI /predict endpoint benchmark
+base_url: http://127.0.0.1:8010
+measured_requests: 100
+warmup_requests: 5
+median_latency_ms: 80.53
+p95_latency_ms: 97.71
+max_latency_ms: 122.60
+requests_per_second: 12.21
+cpu: AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD
+cpu_count_logical: 12
+os: Windows-11-10.0.26300-SP0
+python: 3.12.10
