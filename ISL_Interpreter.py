@@ -10,16 +10,15 @@ from tensorflow.keras.models import load_model
 
 
 def load_labels(labels_path):
+    # Single source of truth for class names; fail loudly rather than fall back.
     labels_file = Path(labels_path)
-    if labels_file.exists():
-        with labels_file.open("r", encoding="utf-8") as handle:
-            labels = json.load(handle)
-        if isinstance(labels, list) and labels:
-            return labels
-    return [
-        "A", "B", "C", "D", "E", "F", "G", "I", "K", "L", "M",
-        "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Z"
-    ]
+    if not labels_file.exists():
+        raise FileNotFoundError(f"Labels file not found: {labels_file}")
+    with labels_file.open("r", encoding="utf-8") as handle:
+        labels = json.load(handle)
+    if not isinstance(labels, list) or not labels:
+        raise ValueError(f"Labels file must contain a non-empty list: {labels_file}")
+    return labels
 
 
 def preprocess_frame(frame):

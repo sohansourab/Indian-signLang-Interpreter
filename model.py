@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import random
 import warnings
 from pathlib import Path
@@ -10,21 +11,28 @@ import tensorflow as tf
 from tensorflow.keras.layers import Activation, Conv2D, Dense, Dropout, Flatten, MaxPooling2D
 from tensorflow.keras.models import Sequential
 
-DEFAULT_LABELS = [
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
-    "L", "M", "N", "O", "P"
-]
 IMG_SIZE = 128
+SEED = 42
+
+
+def set_seeds(seed=SEED):
+    # Fixed seed so training and data shuffling are reproducible.
+    os.environ["PYTHONHASHSEED"] = str(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    tf.random.set_seed(seed)
 
 
 def load_labels(labels_path):
+    # Single source of truth for class names; fail loudly rather than fall back.
     labels_file = Path(labels_path)
-    if labels_file.exists():
-        with labels_file.open("r", encoding="utf-8") as handle:
-            labels = json.load(handle)
-        if isinstance(labels, list) and labels:
-            return labels
-    return DEFAULT_LABELS
+    if not labels_file.exists():
+        raise FileNotFoundError(f"Labels file not found: {labels_file}")
+    with labels_file.open("r", encoding="utf-8") as handle:
+        labels = json.load(handle)
+    if not isinstance(labels, list) or not labels:
+        raise ValueError(f"Labels file must contain a non-empty list: {labels_file}")
+    return labels
 
 
 def create_training_data(data_dir, categories):
@@ -96,14 +104,46 @@ def build_model(num_classes):
     return model
 
 
+def save_training_curves(history, output_path):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    epochs = range(1, len(history.history["loss"]) + 1)
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    axes[0].plot(epochs, history.history["accuracy"], label="train")
+    axes[0].plot(epochs, history.history["val_accuracy"], label="val")
+    axes[0].set_title("Accuracy")
+    axes[0].set_xlabel("Epoch")
+    axes[0].legend()
+
+    axes[1].plot(epochs, history.history["loss"], label="train")
+    axes[1].plot(epochs, history.history["val_loss"], label="val")
+    axes[1].set_title("Loss")
+    axes[1].set_xlabel("Epoch")
+    axes[1].legend()
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150)
+    plt.close(fig)
+    print(f"Saved training curves to {output_path}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Train the ISL CNN")
-    parser.add_argument("--data-dir", default="ISL_Dataset", help="Folder containing one image directory per class")
+    parser.add_argument("--data-dir", default="Training", help="Folder containing one image directory per class")
     parser.add_argument("--labels", default="labels.json", help="JSON file with the class labels")
     parser.add_argument("--output", default="ISL_Interpreter.keras", help="Location to save the trained model")
     parser.add_argument("--epochs", type=int, default=20, help="Number of epochs to train")
     parser.add_argument("--batch-size", type=int, default=32, help="Training batch size")
+    parser.add_argument("--results-dir", default="results", help="Folder for training history and curves")
+    parser.add_argument("--seed", type=int, default=SEED, help="Random seed")
     args = parser.parse_args()
+
+    set_seeds(args.seed)
 
     categories = load_labels(args.labels)
     X, y, skipped = create_training_data(args.data_dir, categories)
@@ -114,10 +154,20 @@ def main():
     model = build_model(len(categories))
 
     lr_scheduler = tf.keras.callbacks.ReduceLROnPlateau(factor=0.5, patience=3, min_lr=1e-6)
-    model.fit(X, y, batch_size=args.batch_size, epochs=args.epochs, validation_split=0.1, callbacks=[lr_scheduler])
+    history = model.fit(X, y, batch_size=args.batch_size, epochs=args.epochs, validation_split=0.1, callbacks=[lr_scheduler])
 
     model.save(args.output)
     print(f"Saved model to {args.output}")
+
+    results_dir = Path(args.results_dir)
+    results_dir.mkdir(parents=True, exist_ok=True)
+    history_path = results_dir / "history.json"
+    history_path.write_text(
+        json.dumps({key: [float(v) for v in values] for key, values in history.history.items()}, indent=2),
+        encoding="utf-8",
+    )
+    print(f"Saved training history to {history_path}")
+    save_training_curves(history, results_dir / "training_curves.png")
 
 
 if __name__ == "__main__":
