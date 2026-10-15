@@ -1,0 +1,14 @@
+In-process single-frame inference (CPU)
+model: ISL_Interpreter.keras
+measured_frames: 100
+warmup_frames: 5
+model_only_median_ms: 65.59
+model_only_p95_ms: 67.45
+model_only_fps: 15.22
+end_to_end_median_ms: 66.01
+end_to_end_p95_ms: 68.17
+end_to_end_fps: 15.10
+cpu: AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD
+cpu_count_logical: 12
+os: Windows-11-10.0.26300-SP0
+python: 3.12.10
