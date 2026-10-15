@@ -1,0 +1,15 @@
+Environment and model details
+os: Windows-11-10.0.26300-SP0
+os_version: 10.0.26300
+cpu: AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD
+cpu_count_logical: 12
+ram_gb: 15.37
+python: 3.12.10
+tensorflow: 2.16.2
+keras: 3.15.1
+opencv: 4.10.0
+fastapi: 0.111.0
+model_file: ISL_Interpreter.keras
+model_size_mb: 75.26
+model_parameters: 6570458
+model_output_shape: (None, 26)
