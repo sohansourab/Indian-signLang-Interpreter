@@ -142,6 +142,6 @@ GTX 1650 could not be used.
 
 ## Credits
 
-Original CNN training and webcam code by the repository owner. Evaluation, duplicate audit,
+Original CNN training and webcam code by the repository owner(sohansourab). Evaluation, duplicate audit,
 API benchmark and environment tooling added in this repository. Built with TensorFlow/Keras,
 OpenCV, scikit-learn, FastAPI, Uvicorn and Docker.
