@@ -1,5 +1,7 @@
 # Indian Sign Language Interpreter
 
+**Live demo:** https://indian-signlang-interpreter.streamlit.app/
+
 A CNN-based fingerspelling **letter** recognizer for Indian Sign Language. It classifies a
 hand-sign image into one of 26 letters (A–Z) and can run from a webcam or a browser.
 This is letter recognition — it does **not** translate sentences or sequences.
