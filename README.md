@@ -95,7 +95,8 @@ streamlit run streamlit_app.py
 
 Streamlit Cloud: set the `MODEL_URL` secret to a hosted copy of `ISL_Interpreter.keras`
 (the file is gitignored because of its size), or place the model beside `streamlit_app.py`.
-`packages.txt` installs the OpenCV system libraries. GPU inference: [NOT MEASURED].
+`packages.txt` installs the OpenCV system libraries and `runtime.txt` pins Python 3.12.
+GPU inference: [NOT MEASURED].
 
 ## Results
 
