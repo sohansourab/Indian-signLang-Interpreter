@@ -4,8 +4,9 @@ A CNN-based fingerspelling **letter** recognizer for Indian Sign Language. It cl
 hand-sign image into one of 26 letters (A–Z) and can run from a webcam or a browser.
 This is letter recognition — it does **not** translate sentences or sequences.
 
-The model, dataset and Docker artifacts are not committed (they are large / environment
-specific). All reported numbers come from files in `results/` and `splits/`.
+Dataset and Docker artifacts are not committed (they are large / environment specific).
+The trained model is committed via Git LFS so the Streamlit app works out of the box.
+All reported numbers come from files in `results/` and `splits/`.
 
 ## Problem
 
@@ -93,10 +94,9 @@ Streamlit (local):
 streamlit run streamlit_app.py
 ```
 
-Streamlit Cloud: set the `MODEL_URL` secret to a hosted copy of `ISL_Interpreter.keras`
-(the file is gitignored because of its size), or place the model beside `streamlit_app.py`.
-`packages.txt` installs the OpenCV system libraries and `runtime.txt` pins Python 3.12.
-GPU inference: [NOT MEASURED].
+Streamlit Cloud: the trained model ships with the repo via Git LFS, so the app works
+out of the box. `MODEL_URL` is still supported as an override. `packages.txt` installs the
+OpenCV system libraries and `runtime.txt` pins Python 3.12. GPU inference: [NOT MEASURED].
 
 ## Results
 
