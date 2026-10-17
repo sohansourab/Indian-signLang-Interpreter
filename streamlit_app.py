@@ -8,7 +8,9 @@ reuses the same 128x128 grayscale preprocessing.
 
 import base64
 import json
+import os
 from pathlib import Path
+from urllib.request import urlretrieve
 
 import cv2
 import numpy as np
@@ -78,6 +80,35 @@ CUSTOM_CSS = """
 </style>
 """
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+
+def resolve_model_url() -> str | None:
+    # Allow deploying without committing the 75 MB model: point MODEL_URL at a
+    # hosted copy (Streamlit secrets, env var, or sidebar).
+    for source in (st.secrets.get("MODEL_URL") if hasattr(st, "secrets") else None,
+                   os.environ.get("MODEL_URL")):
+        if source:
+            return str(source)
+    return None
+
+
+def ensure_model(model_path: str, model_url: str | None) -> Path:
+    mp = Path(model_path)
+    if mp.exists():
+        return mp
+    if not model_url:
+        raise FileNotFoundError(
+            f"Model not found at {mp}. Set MODEL_URL (env var or Streamlit secret) "
+            "to a hosted .keras file, or place the model next to this app."
+        )
+    mp.parent.mkdir(parents=True, exist_ok=True)
+    progress = st.progress(0.0, text="Downloading model (first run only)...")
+    def hook(block, block_size, total):
+        if total and total > 0:
+            progress.progress(min(block * block_size / total, 1.0))
+    urlretrieve(model_url, str(mp), reporthook=hook)
+    progress.progress(1.0, text="Model downloaded.")
+    return mp
 
 
 @st.cache_resource(show_spinner="Loading model (first run only)...")
@@ -150,6 +181,7 @@ def sidebar():
     st.sidebar.markdown("## ⚙️ Settings")
     model_path = st.sidebar.text_input("Model path", value=str(DEFAULT_MODEL_PATH))
     labels_path = st.sidebar.text_input("Labels path", value=str(DEFAULT_LABELS_PATH))
+    model_url = st.sidebar.text_input("Model URL (optional)", value=resolve_model_url() or "")
     threshold = st.sidebar.slider("Confidence threshold", 0.0, 1.0, 0.5, 0.01)
     st.sidebar.markdown("---")
     st.sidebar.markdown("### About")
@@ -164,7 +196,7 @@ def sidebar():
             st.sidebar.markdown("### Recorded metrics")
             for name, m in splits.items():
                 st.sidebar.metric(name, f"{m.get('accuracy', 0):.4f}", f"macro-F1 {m.get('macro_f1', 0):.4f}")
-    return model_path, labels_path, threshold
+    return model_path, labels_path, model_url, threshold
 
 
 def main():
@@ -175,9 +207,10 @@ def main():
         unsafe_allow_html=True,
     )
 
-    model_path, labels_path, threshold = sidebar()
+    model_path, labels_path, model_url, threshold = sidebar()
 
     try:
+        ensure_model(model_path, model_url or None)
         model, labels = load_model_and_labels(model_path, labels_path)
     except Exception as exc:
         st.error(f"Could not load model/labels: {exc}")

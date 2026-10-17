@@ -87,6 +87,16 @@ docker build -t isl-interpreter .
 docker run --rm -p 8000:8000 isl-interpreter
 ```
 
+Streamlit (local):
+
+```powershell
+streamlit run streamlit_app.py
+```
+
+Streamlit Cloud: set the `MODEL_URL` secret to a hosted copy of `ISL_Interpreter.keras`
+(the file is gitignored because of its size), or place the model beside `streamlit_app.py`.
+`packages.txt` installs the OpenCV system libraries. GPU inference: [NOT MEASURED].
+
 ## Results
 
 All figures are from `results/metrics.json` and `results/metrics_clean.json` (seed 42, model
