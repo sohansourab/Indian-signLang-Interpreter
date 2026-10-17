@@ -23,6 +23,7 @@ tmp_test_data/
 X.pickle
 y.pickle
 *.keras
+!ISL_Interpreter.keras
 ISL_Interpreter
 logs/
 checkpoints/

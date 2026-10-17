@@ -4,8 +4,9 @@ A CNN-based fingerspelling **letter** recognizer for Indian Sign Language. It cl
 hand-sign image into one of 26 letters (A–Z) and can run from a webcam or a browser.
 This is letter recognition — it does **not** translate sentences or sequences.
 
-The model, dataset and Docker artifacts are not committed (they are large / environment
-specific). All reported numbers come from files in `results/` and `splits/`.
+Dataset and Docker artifacts are not committed (they are large / environment specific).
+The trained model is committed via Git LFS so the Streamlit app works out of the box.
+All reported numbers come from files in `results/` and `splits/`.
 
 ## Problem
 
@@ -87,6 +88,16 @@ docker build -t isl-interpreter .
 docker run --rm -p 8000:8000 isl-interpreter
 ```
 
+Streamlit (local):
+
+```powershell
+streamlit run streamlit_app.py
+```
+
+Streamlit Cloud: the trained model ships with the repo via Git LFS, so the app works
+out of the box. `MODEL_URL` is still supported as an override. `packages.txt` installs the
+OpenCV system libraries and `runtime.txt` pins Python 3.12. GPU inference: [NOT MEASURED].
+
 ## Results
 
 All figures are from `results/metrics.json` and `results/metrics_clean.json` (seed 42, model
@@ -118,7 +129,8 @@ Windows 11, Python 3.12.10** (see `results/environment.txt`).
 | FastAPI `POST /predict` (HTTP) | 80.53 ms | 97.71 ms | 12.21 req/s | `results/api_latency.txt` |
 
 GPU inference: [NOT MEASURED] — the installed TensorFlow build is CPU-only, so the available
-GTX 1650 could not be used.
+GTX 1650 could not be used. Run `python scripts/benchmark_gpu.py` on a GPU-enabled build to
+record a number.
 
 ## Limitations
 
@@ -138,6 +150,8 @@ GTX 1650 could not be used.
   signer or capture differences) rather than a well-generalising model.
 - **Single provided dataset, controlled setting.** No evidence of performance on new
   signers, varied lighting or cluttered backgrounds. Live-webcam accuracy is [NOT MEASURED].
+To measure it, collect a labeled folder of webcam captures and run
+`python evaluate.py --model-path ISL_Interpreter.keras --labels labels.json --test-dir <folder>`.
 - Not sentence- or sequence-level recognition; static single-letter images only.
 
 ## Credits
