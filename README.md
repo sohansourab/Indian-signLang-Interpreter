@@ -129,7 +129,8 @@ Windows 11, Python 3.12.10** (see `results/environment.txt`).
 | FastAPI `POST /predict` (HTTP) | 80.53 ms | 97.71 ms | 12.21 req/s | `results/api_latency.txt` |
 
 GPU inference: [NOT MEASURED] — the installed TensorFlow build is CPU-only, so the available
-GTX 1650 could not be used.
+GTX 1650 could not be used. Run `python scripts/benchmark_gpu.py` on a GPU-enabled build to
+record a number.
 
 ## Limitations
 
@@ -149,6 +150,8 @@ GTX 1650 could not be used.
   signer or capture differences) rather than a well-generalising model.
 - **Single provided dataset, controlled setting.** No evidence of performance on new
   signers, varied lighting or cluttered backgrounds. Live-webcam accuracy is [NOT MEASURED].
+To measure it, collect a labeled folder of webcam captures and run
+`python evaluate.py --model-path ISL_Interpreter.keras --labels labels.json --test-dir <folder>`.
 - Not sentence- or sequence-level recognition; static single-letter images only.
 
 ## Credits
